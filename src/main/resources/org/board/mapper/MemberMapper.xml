@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.board.mapper.MemberMapper">
+
+	<insert id="registerMember" parameterType="org.board.domain.MemberVO">
+		insert into member (id, password, name, phoneno, email, sex, address, withdrawal) 
+			values (#{id}, #{password}, #{name},#{phoneNo}, #{email}, #{sex}, #{address}, sysdate)
+	</insert>
+	
+	<insert id="registerAuth" parameterType="org.board.domain.MemberAuthVO">
+		insert into member_auth values (#{id}, 'ROLE_MEMBER')
+	</insert>
+	
+	<resultMap type="org.board.domain.MemberVO" id="memberMap">
+		<id property="id" column="id"/>
+		<result property="id" column="id"/>
+		<result property="password" column="password"/>
+		<result property="name" column="name"/>
+		<result property="phoneNo" column="phoneno"/>
+		<result property="email" column="email"/>
+		<result property="sex" column="sex"/>
+		<result property="address" column="address"/>
+		<result property="regDate" column="regdate"/>
+		<result property="modifyDate" column="modifydate"/>
+		<result property="withdrawal" column="withdrawal"/>
+		<result property="enabled" column="enabled"/>
+		<collection property="authList" resultMap="authMap"></collection>
+	</resultMap>
+	
+	<resultMap type="org.board.domain.MemberAuthVO" id="authMap">
+		<result property="id" column="id"/>
+		<result property="auth" column="auth"/>
+	</resultMap>
+	
+	<select id="read" resultMap="memberMap">
+		select mem.id, password, name, phoneno, email, sex, address, regdate, modifydate, withdrawal, enabled, enabled, auth.auth
+			from member mem left outer join member_auth auth on mem.id = auth.id
+			where mem.id = #{id}
+	</select>
+	
+
+</mapper>
