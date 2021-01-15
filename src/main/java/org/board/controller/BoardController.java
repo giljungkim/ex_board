@@ -43,7 +43,9 @@ public class BoardController {
 		return "board/list";
 	}
 	
-	@GetMapping("list.run")
+	//클라이언트로 데이터 넘길때 produces 설정하여 json 객체로 넘기는거 설정해줘야함
+	@GetMapping(value = "list.run", produces = {MediaType.APPLICATION_JSON_UTF8_VALUE})
+	@ResponseBody
 	public List<BoardVO> listRun(){
 		List<BoardVO> list = service.boardList();
 		

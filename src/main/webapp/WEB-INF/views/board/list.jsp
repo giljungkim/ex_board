@@ -54,8 +54,8 @@
 							<th scope="col">수정일</th>
 						</tr>
 					</thead>
-					<tbody>
-						<c:if test="${!empty list }">
+					<tbody id="boardList">
+						<%-- <c:if test="${!empty list }">
 							<c:forEach items="${list}" var="board">
 								<tr>
 									<td><c:out value="${board.boardIdx}" /></td>
@@ -74,7 +74,7 @@
 							<tr>
 								<td colspan="5">조회된 결과가 없습니다.</td>
 							</tr>
-						</c:if>
+						</c:if> --%>
 					</tbody>
 				</table>
 
@@ -186,10 +186,38 @@
 		$.ajax({
 			url : "/board/list.run",
 			type : "get",
-			success : function(data){
-				console.log(data);
-			}
-		});
+			success : function(list){
+				console.log(list);
+				$('#boardList').html("");  
+				var length = list.length;
+				console.log(length);
+				
+				if(length === 0){
+					var str = "";
+					str += "<tr>";
+					str += 	"<td colspan='5'>조회된 결과가 없습니다.</td>";
+					str += "</tr>";
+					
+					$("#boardList").append(str);
+					
+				}else{
+						var str = "";
+						for(var i = 0; i < list.length; i++){
+							str += 		"<tr>";
+							str +=			"<td>"+list[i].boardIdx+"</td>";
+							str +=			"<td>"+list[i].title+"</td>";
+							str +=			"<td>"+list[i].writer+"</td>";
+							str +=			"<td>"+formatDate(list[i].regDate)+"</td>";
+							str +=			"<td>"+formatDate(list[i].modifyDate)+"</td>";
+							str +=		"</tr>";
+						};
+						
+					$("#boardList").append(str);
+						
+					
+				}//end else
+			}//end success
+		});//end ajax
 			
 			$("#regBtn").on("click", function(e){
 				e.preventDefault();
@@ -229,6 +257,17 @@
 			
 			
 	});
+	
+	//날짜 포맷팅
+	   function formatDate(dateVal){
+	         var date = new Date(dateVal);
+	      var year = date.getFullYear();              
+	          var month = (1 + date.getMonth());          
+	              month = month >= 10 ? month : '0' + month;  
+	        var day = date.getDate();                  
+	              day = day >= 10 ? day : '0' + day;      
+	       return  year + '-' + month + '-' + day;       
+	   }
 </script>
 
 <%@include file="../includes/footer.jsp"%>
