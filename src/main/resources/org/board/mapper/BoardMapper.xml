@@ -4,9 +4,13 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.board.mapper.BoardMapper">
 
-	<insert id="registerMember" parameterType="org.board.domain.MemberVO">
-		insert into member values (#{id}, #{password}, #{name}, #{phoneNo}, #{email}, 
-						#{sex}, #{address}, #{picture}, )
+	<insert id="registerBoard" parameterType="org.board.domain.BoardVO">
+		insert into board (boardidx, title, writer, contents) 
+			values (board_idx_seq.nextval, #{title}, #{writer}, #{contents})
 	</insert>
+	
+	<select id="boardList" resultType="org.board.domain.BoardVO">
+		select * from board order by boardidx desc
+	</select>
 
 </mapper>
