@@ -10,4 +10,6 @@ public interface BoardMapper {
 	
 	public List<BoardVO> boardList();
 	
+	public BoardVO detailBoard(int boardIdx);
+	
 }

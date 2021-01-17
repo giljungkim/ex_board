@@ -12,5 +12,9 @@
 	<select id="boardList" resultType="org.board.domain.BoardVO">
 		select * from board order by boardidx desc
 	</select>
+	
+	<select id="detailBoard" parameterType="int" resultType="org.board.domain.BoardVO">
+		select * from board where boardidx = #{boardIdx}
+	</select>
 
 </mapper>

@@ -28,4 +28,10 @@ public class BoardServiceImpl implements BoardService {
 		return mapper.boardList();
 	}
 
+	@Override
+	public BoardVO detailBoard(int boardIdx) {
+		
+		return mapper.detailBoard(boardIdx);
+	}
+
 }

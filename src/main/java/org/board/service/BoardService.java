@@ -10,4 +10,6 @@ public interface BoardService {
 	
 	public List<BoardVO> boardList();
 	
+	public BoardVO detailBoard(int boardIdx);
+	
 }

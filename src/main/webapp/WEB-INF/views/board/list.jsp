@@ -163,15 +163,24 @@
 	<div class="modal-dialog modal-lg">
 		<div class="modal-content">
 			<div class="modal-header">
-				<h4 class="modal-title" id="myModalLabel">디테일 모달</h4>
+				<h4 class="modal-title" id="myModalLabel">상세 보기</h4>
 			</div>
-			<div class="modal-body">
+			<div class="modal-body" id="detailForm">
 				<div class="form-group">
-					<label>제목</label> <input class="form-control" name='title'>
+					<label>제목</label> <input class="form-control" name='title' readonly="readonly">
+				</div>
+				<div class="form-group">
+					<label>글번호</label> <input class="form-control" name='boardIdx' readonly="readonly">
+				</div>
+				<div class="form-group">
+					<label>작성자</label> <input class="form-control" name='writer' readonly="readonly">
+				</div>
+				<div class="form-group">
+					<label>등록일</label> <input class="form-control" name='regDate' readonly="readonly">
 				</div>
 				<div class="form-group">
 					<label>내용</label>
-					<textarea class="form-control" rows="15" name='contents'></textarea>
+					<textarea class="form-control" rows="15" name='contents' readonly="readonly"></textarea>
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
@@ -193,7 +202,8 @@
 		console.log("로그인 아이디 :" + "<%=id%>");
 		
 		getBoardList();//게시물 불러오는 함수
-
+		
+		//게시물등록 모달창 띄우기
 		$("#regBtn").on("click", function(e) {
 			e.preventDefault();
 			//모달창 내 내용 지우기
@@ -230,11 +240,27 @@
 		});//end registerBtn
 
 		//디테일 모달 show
-		$(".detailBtn").on("click", "a", function() {
-			alert("ㅁㅁ");
+		//script 로 생성된 html dom은 id나 class로 컨트롤이 되지 않아 최상위 개체인 document를 먼저 잡은 후 on을 사용하여 핸들러가 가능함
+		$(document).on("click", "#detailBtn", function(e) {
+			e.preventDefault();
 			$("#detailFormModal").modal("show");
-
-		});
+			
+			var boardIdx = $(this).data("boardidx");
+			console.log(boardIdx);
+			
+			$.ajax({
+				url : "/board/detailBoard/" + boardIdx,
+				type : "get",
+				success : function(board){
+					$("#detailForm").find("input[name='title']").val(board.title);
+					$("#detailForm").find("input[name='boardIdx']").val(board.boardIdx);
+					$("#detailForm").find("input[name='writer']").val(board.writer);
+					$("#detailForm").find("input[name='regDate']").val(formatDate(board.regDate));
+					$("#detailForm").find("textarea[name='contents']").val(board.contents);
+				}
+			});//end ajax
+			
+		});//end #edtailBtn
 
 	});//end document.onload
 
@@ -263,7 +289,7 @@
 					for (var i = 0; i < list.length; i++) {
 						str += "<tr>";
 						str += "<td>" + list[i].boardIdx + "</td>";
-						str += "<td><a href='' class='detailBtn'>"+ list[i].title + "</a></td>";
+						str += "<td><a href='' id='detailBtn' data-boardIdx = '"+list[i].boardIdx+"'>"+ list[i].title + "</a></td>";
 						str += "<td>" + list[i].writer + "</td>";
 						str += "<td>" + formatDate(list[i].regDate) + "</td>";
 						str += "<td>" + formatDate(list[i].modifyDate)+ "</td>";
